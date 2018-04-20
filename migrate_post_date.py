@@ -24,6 +24,8 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
+    logging.basicConfig(level=logging.getLevelName(args.log_level))
+
     for file in args.paths:
         file_name = os.path.basename(file.name)
         logging.info(file_name)
