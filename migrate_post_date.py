@@ -3,9 +3,10 @@
 import argparse
 import logging
 import os
+import re
 
-
-import frontmatter
+DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})'
+DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
 
 
 def generate_argument_parser():
@@ -30,8 +31,18 @@ def main():
         file_name = os.path.basename(file.name)
         logging.debug("Operating on: %s", file_name)
 
-        # TODO: Determine if date is in file name
-        # TODO: Extract date from file name
+        # Determine if date is in file name
+        match = DATE_IN_FILENAME_MATCHER.match(file_name)
+        logging.debug('Date in filename: %s', bool(match))
+
+        if not match:
+            logging.info('No date found in file name, skipping file: %s', file_name)
+            continue
+
+        # Extract date from file name
+        publish_date = match.group('date')
+        logging.debug('Publish date: %s', publish_date)
+
         # TODO: Load post
         # TODO: Add date to frontmatter
         # TODO: Add lastmod to frontmatter
