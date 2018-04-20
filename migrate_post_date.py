@@ -28,7 +28,8 @@ def main():
 
     for file in args.paths:
         file_name = os.path.basename(file.name)
-        logging.info(file_name)
+        logging.debug("Operating on: %s", file_name)
+
         # TODO: Determine if date is in file name
         # TODO: Extract date from file name
         # TODO: Load post
