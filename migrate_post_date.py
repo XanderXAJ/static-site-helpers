@@ -12,7 +12,7 @@ def generate_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--log_level', help='Set logging level', default='WARNING',
                         choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'])
-    parser.add_argument('paths', nargs='+', type=argparse.FileType('w'), metavar='path')
+    parser.add_argument('paths', nargs='+', type=argparse.FileType('r+'), metavar='path')
     return parser
 
 
