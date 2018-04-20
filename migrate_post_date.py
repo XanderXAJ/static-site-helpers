@@ -5,6 +5,8 @@ import logging
 import os
 import re
 
+import frontmatter
+
 DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})'
 DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
 
@@ -22,30 +24,46 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def add_date_to_post_frontmatter(post, date):
+    """
+    Adds (but does not overwrite) `date` and `lastmod` fields to `post`'s
+    frontmatter with corresponding `date`.
+    """
+    if 'date' not in post:
+        post['date'] = date
+
+    if 'lastmod' not in post:
+        post['lastmod'] = date
+
+
 def main():
     args = parse_arguments()
 
     logging.basicConfig(level=logging.getLevelName(args.log_level))
 
-    for file in args.paths:
-        file_name = os.path.basename(file.name)
-        logging.debug("Operating on: %s", file_name)
+    for source_file in args.paths:
+        source_file_name = os.path.basename(source_file.name)
+        logging.debug("Operating on: %s", source_file_name)
 
         # Determine if date is in file name
-        match = DATE_IN_FILENAME_MATCHER.match(file_name)
+        match = DATE_IN_FILENAME_MATCHER.match(source_file_name)
         logging.debug('Date in filename: %s', bool(match))
 
         if not match:
-            logging.info('No date found in file name, skipping file: %s', file_name)
+            logging.info('No date found in file name, skipping file: %s', source_file_name)
             continue
 
         # Extract date from file name
         publish_date = match.group('date')
         logging.debug('Publish date: %s', publish_date)
 
-        # TODO: Load post
-        # TODO: Add date to frontmatter
-        # TODO: Add lastmod to frontmatter
+        # Load post for modification
+        post = frontmatter.load(source_file)
+        logging.debug(post.metadata)
+
+        add_date_to_post_frontmatter(post.metadata, publish_date)
+        logging.debug(post.metadata)
+
         # TODO: Create file name without date
         # TODO: Check file name without date doesn't already exist
         # TODO: Write to file name without date
