@@ -74,10 +74,10 @@ def main():
 
         # Load post for modification
         post = frontmatter.load(source_file_path)
-        logging.debug(post.metadata)
+        logging.debug("Frontmatter before: %s", post.metadata)
 
         update_post_frontmatter_with_date(post.metadata, publish_date)
-        logging.debug(post.metadata)
+        logging.debug("Frontmatter after: %s", post.metadata)
 
         # Write post to same file
         destination_file_path = source_file_path
