@@ -38,6 +38,19 @@ def add_date_to_post_frontmatter(post, date):
         post['lastmod'] = date
 
 
+def parse_date(source, matcher, strftime_format):
+    """Uses `matcher` to parse `date` string"""
+    match = matcher.match(source)
+
+    if not match:
+        return False, None
+
+    date_string = match.group('date')
+    # Parse the date to ensure value is written to frontmatter without quotes
+    date = datetime.datetime.strptime(date_string, strftime_format).date()
+
+    return True, date
+
 def main():
     args = parse_arguments()
 
@@ -47,19 +60,13 @@ def main():
         source_file_name = os.path.basename(source_file_path)
         logging.debug("Operating on: %s", source_file_path)
 
-        # Determine if date is in file name
-        match = DATE_IN_FILENAME_MATCHER.match(source_file_name)
+        match, publish_date = parse_date(source_file_name, DATE_IN_FILENAME_MATCHER, DATE_STRFTIME_FORMAT)
         logging.debug('Date in filename: %s', bool(match))
+        logging.debug('Publish date: %s', publish_date)
 
         if not match:
             logging.info('No date found in file name, skipping file: %s', source_file_name)
             continue
-
-        # Extract date from file name
-        publish_date_string = match.group('date')
-        # Parse the date to ensure value is written to frontmatter without quotes
-        publish_date = datetime.datetime.strptime(publish_date_string, DATE_STRFTIME_FORMAT).date()
-        logging.debug('Publish date: %s', publish_date)
 
         # Load post for modification
         post = frontmatter.load(source_file_path)
