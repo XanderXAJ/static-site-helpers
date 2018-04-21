@@ -68,6 +68,11 @@ def main():
         add_date_to_post_frontmatter(post.metadata, publish_date)
         logging.debug(post.metadata)
 
+        # Write post to same file
+        destination_file_path = source_file_path
+
+        frontmatter.dump(post, destination_file_path)
+
         # TODO: Create file name without date
         # TODO: Check file name without date doesn't already exist
         # TODO: Write to file name without date
