@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import datetime
 import logging
 import os
 import re
 
-import datetime
 import frontmatter
 
 DATE_STRFTIME_FORMAT = '%Y-%m-%d'
