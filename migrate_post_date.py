@@ -26,7 +26,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def add_date_to_post_frontmatter(post, date):
+def update_post_frontmatter_with_date(post, date):
     """
     Adds (but does not overwrite) `date` and `lastmod` fields to `post`'s
     frontmatter with corresponding `date`.
@@ -76,7 +76,7 @@ def main():
         post = frontmatter.load(source_file_path)
         logging.debug(post.metadata)
 
-        add_date_to_post_frontmatter(post.metadata, publish_date)
+        update_post_frontmatter_with_date(post.metadata, publish_date)
         logging.debug(post.metadata)
 
         # Write post to same file
