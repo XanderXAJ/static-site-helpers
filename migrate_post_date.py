@@ -5,8 +5,10 @@ import logging
 import os
 import re
 
+import datetime
 import frontmatter
 
+DATE_STRFTIME_FORMAT = '%Y-%m-%d'
 DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})'
 DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
 
@@ -54,7 +56,9 @@ def main():
             continue
 
         # Extract date from file name
-        publish_date = match.group('date')
+        publish_date_string = match.group('date')
+        # Parse the date to ensure value is written to frontmatter without quotes
+        publish_date = datetime.datetime.strptime(publish_date_string, DATE_STRFTIME_FORMAT).date()
         logging.debug('Publish date: %s', publish_date)
 
         # Load post for modification
