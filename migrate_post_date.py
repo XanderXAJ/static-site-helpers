@@ -1,58 +1,18 @@
 #!/usr/bin/env python3
 
-import argparse
-import datetime
 import logging
+
+import frontmatter
 import os
 import re
 
-import frontmatter
+from lib.arg import parse_arguments
+from lib.date import parse_date
+from lib.post import update_post_frontmatter_with_date
 
 DATE_STRFTIME_FORMAT = '%Y-%m-%d'
 DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})'
 DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
-
-
-def generate_argument_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--log_level', help='Set logging level', default='WARNING',
-                        choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'])
-    parser.add_argument('paths', nargs='+', metavar='path')
-    return parser
-
-
-def parse_arguments():
-    parser = generate_argument_parser()
-    return parser.parse_args()
-
-
-def update_post_frontmatter_with_date(post, date):
-    """
-    Adds (but does not overwrite) `date` and `lastmod` fields to `post`'s
-    frontmatter with corresponding `date`.
-    """
-    if 'date' not in post:
-        post['date'] = date
-
-    if 'lastmod' not in post:
-        post['lastmod'] = date
-
-
-def parse_date(source, matcher, strftime_format):
-    """
-    Uses `matcher` to parse `date` string.
-    Return a tuple of (match_occurred, parsed_date or None).
-    """
-    match = matcher.match(source)
-
-    if not match:
-        return False, None
-
-    date_string = match.group('date')
-    # Parse the date in to datetime to ensure value is written to frontmatter without quotes
-    date = datetime.datetime.strptime(date_string, strftime_format).date()
-
-    return True, date
 
 
 def main():
