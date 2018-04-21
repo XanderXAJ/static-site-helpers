@@ -17,7 +17,7 @@ def generate_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--log_level', help='Set logging level', default='WARNING',
                         choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'])
-    parser.add_argument('paths', nargs='+', type=argparse.FileType('r+'), metavar='path')
+    parser.add_argument('paths', nargs='+', metavar='path')
     return parser
 
 
@@ -43,9 +43,9 @@ def main():
 
     logging.basicConfig(level=logging.getLevelName(args.log_level))
 
-    for source_file in args.paths:
-        source_file_name = os.path.basename(source_file.name)
-        logging.debug("Operating on: %s", source_file_name)
+    for source_file_path in args.paths:
+        source_file_name = os.path.basename(source_file_path)
+        logging.debug("Operating on: %s", source_file_path)
 
         # Determine if date is in file name
         match = DATE_IN_FILENAME_MATCHER.match(source_file_name)
@@ -62,7 +62,7 @@ def main():
         logging.debug('Publish date: %s', publish_date)
 
         # Load post for modification
-        post = frontmatter.load(source_file)
+        post = frontmatter.load(source_file_path)
         logging.debug(post.metadata)
 
         add_date_to_post_frontmatter(post.metadata, publish_date)
