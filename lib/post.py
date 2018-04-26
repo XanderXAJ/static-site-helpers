@@ -1,7 +1,7 @@
 def update_post_frontmatter_with_date(post, date):
     """
-    Adds (but does not overwrite) `date` and `lastmod` fields to `post`'s
-    frontmatter with corresponding `date`.
+    Mutates (but does not overwrite) `post`'s `date` and `lastmod`
+    frontmatter fields with the passed `date`.
     """
     if 'date' not in post:
         post['date'] = date
