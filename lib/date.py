@@ -16,6 +16,6 @@ def parse_date(source, matcher_regex, matcher_strftime_format):
 
     date_string = match.group('date')
     # Parse the date in to datetime to ensure value is written to frontmatter without quotes
-    date = datetime.datetime.strptime(date_string, matcher_strftime_format).date()
+    parsed_date = datetime.datetime.strptime(date_string, matcher_strftime_format).date()
 
-    return True, date
+    return True, parsed_date
