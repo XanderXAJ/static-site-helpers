@@ -10,6 +10,7 @@ from lib.arg import parse_arguments
 from lib.date import parse_date
 from lib.post import update_post_frontmatter_with_date
 
+# Note: The regex and strftime expressions must match the same date format.
 DATE_STRFTIME_FORMAT = '%Y-%m-%d'
 DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})'
 DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
