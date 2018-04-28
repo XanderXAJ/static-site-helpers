@@ -6,6 +6,8 @@ def parse_date(source, matcher_regex, matcher_strftime_format):
     Uses `matcher` to parse `date` string.
     Return a tuple of (True, parsed_date) on match, or (False, None).
 
+    The `matcher_regex` must supply a date group (e.g. `(?P<date>...)`).
+
     Note: The date format matched by `matcher_regex` and `matcher_strftime_format`
     must be equivalent, otherwise this function will not behave as expected.
     """
