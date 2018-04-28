@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import contextlib
 import logging
 
 import frontmatter
@@ -22,8 +22,9 @@ def main():
     logging.basicConfig(level=logging.getLevelName(args.log_level))
 
     for source_file_path in args.paths:
-        source_file_name = os.path.basename(source_file_path)
         logging.debug("Operating on: %s", source_file_path)
+        source_file_dir = os.path.dirname(source_file_path)
+        source_file_name = os.path.basename(source_file_path)
 
         match = re.fullmatch(DATE_IN_FILENAME_REGEX, source_file_name)
         if not match:
@@ -47,15 +48,15 @@ def main():
         lib.post.update_frontmatter_with_date(post.metadata, publish_date)
         logging.debug("Frontmatter after: %s", post.metadata)
 
-        # Write post to same file
-        destination_file_path = source_file_path
-
+        # Write post to file name without date
+        destination_file_path = os.path.join(source_file_dir, tokens['title'])
+        logging.debug('Destination: %s', destination_file_path)
         frontmatter.dump(post, destination_file_path)
 
-        # TODO: Create file name without date
-        # TODO: Check file name without date doesn't already exist
-        # TODO: Write to file name without date
-        # TODO: Remove old file
+        # Remove old file
+        logging.debug('Removing old file: %s', source_file_path)
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(source_file_path)
 
 
 main()
