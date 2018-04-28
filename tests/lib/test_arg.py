@@ -34,3 +34,8 @@ class TestArgIntegration(unittest.TestCase):
         args = lib.arg.parse_arguments(['--log_level', 'DEBUG', './file'])
 
         self.assertEqual(args.log_level, 'DEBUG')
+
+    def test_log_level_parsed_case_insensitive(self):
+        args = lib.arg.parse_arguments(['--log_level', 'debug', './file'])
+
+        self.assertEqual(args.log_level, 'DEBUG')
