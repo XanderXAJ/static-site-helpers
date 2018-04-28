@@ -6,9 +6,9 @@ import frontmatter
 import os
 import re
 
-from lib.arg import parse_arguments
-from lib.date import parse_date
-from lib.post import update_post_frontmatter_with_date
+import lib.arg
+import lib.date
+import lib.post
 
 # Note: The regex and strftime expressions must match the same date format.
 DATE_STRFTIME_FORMAT = '%Y-%m-%d'
@@ -17,7 +17,7 @@ DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
 
 
 def main():
-    args = parse_arguments()
+    args = lib.arg.parse_arguments()
 
     logging.basicConfig(level=logging.getLevelName(args.log_level))
 
@@ -25,7 +25,7 @@ def main():
         source_file_name = os.path.basename(source_file_path)
         logging.debug("Operating on: %s", source_file_path)
 
-        match, publish_date = parse_date(source_file_name, DATE_IN_FILENAME_MATCHER, DATE_STRFTIME_FORMAT)
+        match, publish_date = lib.date.parse_date(source_file_name, DATE_IN_FILENAME_MATCHER, DATE_STRFTIME_FORMAT)
         logging.debug('Date in filename: %s', bool(match))
         logging.debug('Publish date: %s', publish_date)
 
@@ -37,7 +37,7 @@ def main():
         post = frontmatter.load(source_file_path)
         logging.debug("Frontmatter before: %s", post.metadata)
 
-        update_post_frontmatter_with_date(post.metadata, publish_date)
+        lib.post.update_frontmatter_with_date(post.metadata, publish_date)
         logging.debug("Frontmatter after: %s", post.metadata)
 
         # Write post to same file
