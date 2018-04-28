@@ -1,7 +1,9 @@
 import datetime
+import typing
 
 
-def parse_date(source, matcher_regex, matcher_strftime_format):
+def parse_date(source: str, matcher_regex: typing.Pattern, matcher_strftime_format: str)\
+        -> typing.Tuple[bool, typing.Union[type(None), datetime.date]]:
     """
     Uses `matcher` to parse `date` string.
     Return a tuple of (True, parsed_date) on match, or (False, None).
