@@ -12,7 +12,7 @@ import lib.post
 
 # Note: The regex and strftime expressions must match the same date format.
 DATE_STRFTIME_FORMAT = '%Y-%m-%d'
-DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})'
+DATE_IN_FILENAME_REGEX = r'^(?P<date>\d{4}-\d{2}-\d{2})-(?P<title>.*)$'
 DATE_IN_FILENAME_MATCHER = re.compile(DATE_IN_FILENAME_REGEX)
 
 
@@ -25,13 +25,20 @@ def main():
         source_file_name = os.path.basename(source_file_path)
         logging.debug("Operating on: %s", source_file_path)
 
-        match, publish_date = lib.date.parse_date(source_file_name, DATE_IN_FILENAME_MATCHER, DATE_STRFTIME_FORMAT)
-        logging.debug('Date in filename: %s', bool(match))
-        logging.debug('Publish date: %s', publish_date)
-
+        match = re.fullmatch(DATE_IN_FILENAME_REGEX, source_file_name)
         if not match:
-            logging.info('No date found in file name, skipping file: %s', source_file_name)
+            logging.info('File name did not match regex %s, skipping file: %s',
+                         DATE_IN_FILENAME_REGEX, source_file_name)
             continue
+
+        tokens = match.groupdict()
+        if not ('date' in tokens and 'title' in tokens):
+            logging.info('Did not match date and title, skipping %s', source_file_path)
+            continue
+        logging.debug('Matched tokens: %s', tokens)
+
+        publish_date = lib.date.parse_date(tokens['date'], DATE_STRFTIME_FORMAT)
+        logging.debug('Publish date: %s', publish_date)
 
         # Load post for modification
         post = frontmatter.load(source_file_path)
