@@ -25,6 +25,12 @@ Then install the project's dependencies:
 pipenv install
 ```
 
+This project uses `unittest` for testing.  To run the tests:
+
+```bash
+pipenv run python -m unittest
+```
+
 Use `pipenv run` to run commands inside the virtualenv from outside the virtualenv.
 Use `pipenv shell` to get a shell inside the virtualenv.
 
